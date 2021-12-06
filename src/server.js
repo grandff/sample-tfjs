@@ -3,7 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import mysql from "mysql";
 import {simpleTest} from "./tfjs_001/model";
-import {getData} from "./tfjs_002/script";
+import {run} from "./tfjs_002/script";
 
 const app = express();
 
@@ -48,8 +48,11 @@ app.get("/test2-vis", (req, res) => {
 
 // 데이터 예측
 app.get("/test2", async (req,res) => {
-	const jsonData = await getData();
-	res.json(jsonData);	
+	const result = await run();
+	console.log(result);
+	res.json({
+		message : "Train Complete"
+	})
 });
 
 

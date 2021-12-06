@@ -12,7 +12,7 @@ export const simpleTest = async () => {
 
 	const history = await model.fit(xs, ys, {
 		epochs : 10, 
-		callbakcs : {
+		callbacks : {
 			onEpochEnd : (epoch, log) => console.log(`Epoch : ${epoch}, loss = ${log.loss}`)
 		}
 	});	
