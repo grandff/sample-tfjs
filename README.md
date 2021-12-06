@@ -14,6 +14,13 @@
     - npm install nodemon -D
     - npm install mysql
     - npm install dotenv
+	- npm install @tensorflow/tfjs
+	- npm install @tensorflow/tfjs-node
+	- npm install @tensorflow/tfjs-vis
+	- npm install axios
 4. git 설정
     - git init
 5. server 파일 추가 및 json 설정 
+
+
+### MySQL 사용법

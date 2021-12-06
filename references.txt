@@ -1,0 +1,2 @@
+1. node js REST APi : https://ichi.pro/ko/cheoeumbuteo-nodejs-mich-mysqleul-sayonghayeo-rest-api-saengseong-14397877526049
+2. 참고사ㅏㅎㅇ : https://velog.io/@wimes/node.js-REST-API-%EC%84%9C%EB%B2%84-%EB%A7%8C%EB%93%A4%EA%B8%B0-3.-%EB%A7%8C%EB%93%A4%EA%B8%B0
