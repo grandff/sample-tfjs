@@ -13,12 +13,14 @@
     "@tensorflow/tfjs": "^3.11.0",
     "@tensorflow/tfjs-node": "^3.11.0",
     "@tensorflow/tfjs-vis": "^1.5.1",
+    "argparse": "^2.0.1",
     "axios": "^0.24.0",
     "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mysql": "^2.18.1",
     "node-fetch": "^3.1.0",
+    "socket.io": "^4.4.0",
     "yarn": "^1.22.17"
   },
   "devDependencies": {
@@ -26,6 +28,15 @@
     "@babel/core": "^7.16.0",
     "@babel/node": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
-    "nodemon": "^2.0.15"
+    "clang-format": "^1.6.0",
+    "mkdirp": "^1.0.4",
+    "nodemon": "^2.0.15",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.6.0"
+  },
+  "resolutions": {
+    "ssri": "8.0.1",
+    "glob-parent": "5.1.2"
   }
 }
