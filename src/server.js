@@ -52,7 +52,7 @@ app.get("/test2", async (req,res) => {
 	console.log(result);
 	res.json({
 		message : "Train Complete"
-	})
+	});
 });
 
 

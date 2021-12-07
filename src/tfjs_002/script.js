@@ -34,6 +34,10 @@ const createModel = () => {
 		useBias : true
 	}));	// single input layer
 	model.add(tf.layers.dense({
+		units : 50,
+		activation : 'sigmoid'
+	}));	// hidden layer
+	model.add(tf.layers.dense({
 		units : 1,	// 가중치
 		useBias : true
 	}));	// output layer
@@ -43,6 +47,7 @@ const createModel = () => {
 
 // 데이터를 텐서로 변환
 const convertToTenser = (data) => {
+	// tidy로 tensor를 한번에 정리함
 	return tf.tidy(() => {
 		// shuffle data
 		/*
@@ -98,8 +103,8 @@ const trainModel = async (model, inputs, labels) => {
 		metrics : ['mse']
 	});
 	
-	const batchSize = 32;
-	const epochs = 50;
+	const batchSize = 64;
+	const epochs = 100;
 	
 	const result = await model.fit(inputs, labels, {
 		batchSize,
@@ -124,9 +129,13 @@ export const run = async () => {
 	const tensorData = convertToTenser(data);
 	const {inputs, labels} = tensorData;
 	// train model
-	const result = await trainModel(model, inputs, labels);
-	
-	return result;
+	const trainResult = await trainModel(model, inputs, labels);
+	// test model
+	const testResult = testModel(model, data, tensorData);
+	return {
+		train : trainResult,
+		test : testResult
+	};
 }
 
 // 모델 예측
@@ -134,5 +143,30 @@ export const run = async () => {
 	마력이 낮은 것부터 높은 것 까지 일정한 범위의 숫자를 예측
 */
 export const testModel = (model, inputData, normalizationData) => {
+	const {inputMax, inputMin, labelMin, labelMax} = normalizationData;
 	
+	const [xs, preds] = tf.tidy(() => {
+		// 0 ~ 1 까지 예시 데이터 100개 생성
+		const xs = tf.linspace(0, 1, 100);		
+		// 학습 시 유사한 형태로 맞춤
+		const preds = model.predict(xs.reshape([100, 1]));	
+		// 정규화 시킨 데이터를 (0~1) 원래 범위로 되돌리는 작업
+		const unNormXs = xs
+		.mul(inputMax.sub(inputMin))
+		.add(inputMin);
+		
+		const unNormPreds = preds
+		.mul(labelMax.sub(labelMin))
+		.add(labelMin);
+		
+		// un normalize the data
+		// datasync는 텐서에 저장된 값의 typedarray를 가져오는데 사용
+		return [unNormXs.dataSync(), unNormPreds.dataSync()];
+	});
+	
+	const predictedPoints = Array.from(xs).map((val, i) => {
+		return {x : val, y : preds[i]}
+	});
+	
+	return predictedPoints;
 }
