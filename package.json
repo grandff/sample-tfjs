@@ -19,7 +19,6 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mysql": "^2.18.1",
-    "node-fetch": "^3.1.0",
     "socket.io": "^4.4.0",
     "yarn": "^1.22.17"
   },
@@ -36,6 +35,7 @@
     "webpack-dev-server": "^4.6.0"
   },
   "resolutions": {
+    "node-fetch": "2.6.1",
     "ssri": "8.0.1",
     "glob-parent": "5.1.2"
   }
