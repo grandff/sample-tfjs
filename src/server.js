@@ -4,11 +4,13 @@ import bodyParser from "body-parser";
 import mysql from "mysql";
 import {simpleTest} from "./tfjs_001/model";
 import {run} from "./tfjs_002/script";
+import {run as tf3run, predictSample} from "./tfjs_003/pitch_type";
+import { checkData } from "./tfjs_003/utils";
 
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({extended : true}));
+app.use(express.urlencoded({extended : true}));		// express 였는지 node 였는지 일정버전 이하에는 body-parser를 사용해야함
 
 const PORT = process.env.PORT;
 
@@ -55,6 +57,45 @@ app.get("/test2", async (req,res) => {
 	});
 });
 
+//ptich type train
+app.get("/pitch-type/train", async (req, res) => {
+	const result = await tf3run();
+	console.log("the end");
+
+	res.json({
+		message : "Train Complete"
+	});
+})
+
+// pitch type predict
+// postman test시 x-www-form-urlencoded 선택해야함
+/*
+	vx0,vy0,vz0,ax,ay,az,start_speed,left_handed_pitcher
+	1.97350398860808,-129.267726266149,-4.49716679881118,6.62397065405993,26.8317990780022,-27.7276871429288,88.9,0
+	슬라이더 데이터
+*/
+app.post("/pitch-type/predict", async (req, res) => {	
+	let resultMsg = "";
+	// get data want to predict
+	const getData = req.body;	
+	const dataCheckResult = checkData(getData);
+	console.log(dataCheckResult);
+	
+	// if null, return fail message
+	if(dataCheckResult.errorFlag){
+		res.json({
+			message : "예측에 실패했습니다.",
+			errMsg : "입력 값을 확인해주세요."
+		})
+	}else{
+		const result = await predictSample(dataCheckResult.returnAry);
+		res.json({
+			message : "예측에 성공했습니다.",
+			errMsg : "",
+			type : result
+		});
+	}
+})
 
 
 app.listen(PORT, () => console.log(`server on ${PORT}`));
