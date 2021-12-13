@@ -20,6 +20,7 @@
 	- npm install axios
 	- yarn add clang-format mkdirp webpack webpack-cli webpack-dev-server -D
 	- yarn add argparse socket.io
+	- yarn add csv-parser
 4. git 설정
     - git init
 5. server 파일 추가 및 json 설정 
@@ -49,3 +50,6 @@
 
 git 확인
 https://fomaios.tistory.com/entry/Git-Github-%EA%B0%99%EC%9D%80-%EC%A0%80%EC%9E%A5%EC%86%8C-%ED%95%A8%EA%BB%98-%EC%93%B0%EA%B8%B0feat%ED%98%91%EC%97%85%ED%95%98%EA%B8%B0
+
+이것도 정리 잘되어있음
+https://github.com/StephenGrider/MLKits
