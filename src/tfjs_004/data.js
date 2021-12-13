@@ -18,23 +18,41 @@ export const downloadCsv = async (fileUrl, fileName) => {
 	await axios.get(fileUrl, {responseType: "stream"})
 	.then(response => {  
 		// Saving file to working directory  
-    	response.data.pipe(fs.createWriteStream(`./csv/${fileName}.csv`)); 
+		console.log("test!!!");
+    	response.data.pipe(fs.createWriteStream(`./csv/${fileName}.csv`));
+		console.log("maybe end!!!");
 	}) 
     .catch(error => {  
     	console.log(error);  
-	});  	
+	});
 }
 
 // read csv 파일
+// csv에 있는 데이터를 float형으로 바꾸는 작업이 필요함
 export const readCsv = async (filePath) => {
 	return new Promise((resolve, reject) => {
-		const dataSet = []
+		let dataSet = [];
+		const testResult = null;
 		const readStream = fs.createReadStream(filePath);
-		readStream.pipe(csv()).on('error', () => { return reject(new Error('Error reading file')) }).on('data', (data) => { dataSet.push(data) }).on('end', () => { resolve(dataSet) })
+		readStream
+		.pipe(csv())
+		.on('error', () => { 
+			return reject(new Error('Error reading file')) 
+		})
+		.on('data', (data) => { 		
+			dataSet.push(data);			
+		})
+		.on('end', () => { 
+			dataSet = dataSet.map((row) => {				
+				return Object.keys(row).map(key => parseFloat(row[key]));
+			});
+			console.log("may be end 3333")
+			resolve(dataSet) ;
+		})
 	});
 }
-	  
 
+	 
 /*
 	 아래 소스들은 browser 기준이라 안됨 ...
 */

@@ -102,8 +102,12 @@ app.get("/boston/test", async (req, res) => {
 	// data target
 	//await loadCsv(testUrl);
 	await downloadCsv(testUrl, "test-target");
-	const test = await readCsv("./csv/test-target.csv");
-	console.log(test, test.length);
+	
+	setTimeout(async () => {
+		const test = await readCsv("./csv/test-target.csv");
+		console.log(test.length);	
+	}, 3000)
+	
 	res.json({
 		message : "end"
 	});
