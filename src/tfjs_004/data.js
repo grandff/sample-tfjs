@@ -2,6 +2,9 @@ import * as tf from "@tensorflow/tfjs-node";
 import * as fs from "fs";
 const axios = require('axios');
 const csv = require('csv-parser');
+const util = require('util');
+const stream = require('stream');
+const pipeline = util.promisify(stream.pipeline);
 
 // data set
 const BASE_URL = "https://storage.googleapis.com/tfjs-examples/multivariate-linear-regression/data/";
@@ -10,21 +13,33 @@ const TRAIN_TARGET_FN = 'train-target.csv';
 const TEST_FEATURES_FN = 'test-data.csv';
 const TEST_TARGET_FN = 'test-target.csv';
 
+// 확장자만 떼서 파일 이름 주기
+const getFileName = (fileName) => {
+	if(!fileName) return null;
+	const fileAry = fileName.split(".");
+	console.log(`file name : ${fileAry[0]}`)
+	return fileAry[0];
+}
+
 // test sources
 const results = [];
 
 // download csv 파일
-export const downloadCsv = async (fileUrl, fileName) => {
-	await axios.get(fileUrl, {responseType: "stream"})
-	.then(response => {  
-		// Saving file to working directory  
-		console.log("test!!!");
-    	response.data.pipe(fs.createWriteStream(`./csv/${fileName}.csv`));
-		console.log("maybe end!!!");
-	}) 
-    .catch(error => {  
-    	console.log(error);  
-	});
+export const downloadCsv = async (fileName) => {
+	let result = [];
+	const url = `${BASE_URL}${fileName}`;
+	const csvFile = getFileName(fileName);
+	try{
+		const request = await axios.get(url,{responseType:'stream'});
+		await pipeline(request.data, fs.createWriteStream(`./csv/${csvFile}.csv`));
+		result = await readCsv(`./csv/${csvFile}.csv`);
+		console.log(`download complete ${csvFile}`);
+		console.log(result.length);
+	}catch(error){
+		console.log('download error', error);
+	}
+	
+	return result;
 }
 
 // read csv 파일
@@ -45,8 +60,7 @@ export const readCsv = async (filePath) => {
 		.on('end', () => { 
 			dataSet = dataSet.map((row) => {				
 				return Object.keys(row).map(key => parseFloat(row[key]));
-			});
-			console.log("may be end 3333")
+			});			
 			resolve(dataSet) ;
 		})
 	});
@@ -69,7 +83,7 @@ const parseCsv = async (data) => {
 }
 
 // papaparse 사용해서 csv 파일 읽기
-export const loadCsv = async (filename) => {
+/*export const loadCsv = async (filename) => {
 	return new Promise(resolve => {
 		const url = `${BASE_URL}${filename}`;
 		console.log(` 파일 다운로드 : ${url}`);
@@ -81,7 +95,7 @@ export const loadCsv = async (filename) => {
 			}
 		})
 	})
-}
+}*/
 
 // 데이터 섞기
 // 섞는 알고리즘 .. 임시변수에 이전값 넣어두고 랜덤으로 생성된 인덱스에 값 넣기
@@ -103,8 +117,32 @@ const shuffle = (data, target) => {
 	}
 }
 
+// x features
+export const featureDescriptions = [
+	'Crime rate', 'Land zone size', 'Industrial proportion', 'Next to river', 'Nitric oxide concentration', 'Number of rooms per house', 'Age of housing', 'Distance to commute', 'Distance to highway', 'Tax rate', 'School class size', 'School drop-out rate'
+]
+
 export class BostonHousingDataset {
 	constructor() {
 		this.trainFeatures = null;
+		this.trainTarget = null;
+		this.testFeatures = null;
+		this.testTarget = null;
+	}
+	
+	get numFeatures(){
+		if(this.trainFeatures === null){
+			throw new Error('need to load data')
+		}
+		return this.trainFeatures[0].length
+	}
+	
+	async loadData(){
+		[this.trainFeatures, this.trainTarget, this.testFeatures, this.testTarget] = await Promise.all([
+			downloadCsv(TRAIN_FEATURES_FN), downloadCsv(TRAIN_TARGET_FN), downloadCsv(TEST_FEATURES_FN), downloadCsv(TEST_TARGET_FN)
+		]);
+		
+		shuffle(this.trainFeatures, this.trainTarget);
+		shuffle(this.testFeatures, this.testTarget);
 	}
 }

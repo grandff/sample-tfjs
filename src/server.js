@@ -6,7 +6,10 @@ import {simpleTest} from "./tfjs_001/model";
 import {run} from "./tfjs_002/script";
 import {run as tf3run, predictSample} from "./tfjs_003/pitch_type";
 import { checkData } from "./tfjs_003/utils";
-import {loadCsv, downloadCsv, readCsv} from "./tfjs_004/data";
+import {BostonHousingDataset, featureDescriptions} from "./tfjs_004/data";
+
+// boston constructor
+const bostonData = new BostonHousingDataset();
 
 const app = express();
 
@@ -98,16 +101,18 @@ app.post("/pitch-type/predict", async (req, res) => {
 });
 
 app.get("/boston/test", async (req, res) => {
-	let testUrl = "https://storage.googleapis.com/tfjs-examples/multivariate-linear-regression/data/train-data.csv";
+	//let testUrl = "https://storage.googleapis.com/tfjs-examples/multivariate-linear-regression/data/train-data.csv";
 	// data target
 	//await loadCsv(testUrl);
-	await downloadCsv(testUrl, "test-target");
-	
+	//await downloadCsv(testUrl, "test-target");
+	/*const test = await readCsv("./csv/test-target.csv");
+	console.log(test.length);	
 	setTimeout(async () => {
 		const test = await readCsv("./csv/test-target.csv");
 		console.log(test.length);	
 	}, 3000)
-	
+	*/
+	await bostonData.loadData();
 	res.json({
 		message : "end"
 	});
