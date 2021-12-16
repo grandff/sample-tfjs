@@ -6,7 +6,7 @@ const util = require('util');
 const stream = require('stream');
 const pipeline = util.promisify(stream.pipeline);
 
-// data set
+// data set url
 const BASE_URL = "https://storage.googleapis.com/tfjs-examples/multivariate-linear-regression/data/";
 const TRAIN_FEATURES_FN = 'train-data.csv';
 const TRAIN_TARGET_FN = 'train-target.csv';
@@ -20,9 +20,6 @@ const getFileName = (fileName) => {
 	console.log(`file name : ${fileAry[0]}`)
 	return fileAry[0];
 }
-
-// test sources
-const results = [];
 
 // download csv 파일
 export const downloadCsv = async (fileName) => {
@@ -65,37 +62,6 @@ export const readCsv = async (filePath) => {
 		})
 	});
 }
-
-	 
-/*
-	 아래 소스들은 browser 기준이라 안됨 ...
-*/
-// csv parsing
-// csv 데이터를 array of arrays of numbers 형태로 리턴 .. ?
-// promise, map을 통해 csv object를 array 형태로 주는거 같음..
-const parseCsv = async (data) => {
-	return new Promise(resolve => {
-		data = data.map((row) => {
-			return Object.keys(row).map(key => parseFloat(row[key]));
-		});
-		resolve(data);
-	});
-}
-
-// papaparse 사용해서 csv 파일 읽기
-/*export const loadCsv = async (filename) => {
-	return new Promise(resolve => {
-		const url = `${BASE_URL}${filename}`;
-		console.log(` 파일 다운로드 : ${url}`);
-		papa.parse(url, {
-			download : true,
-			header : true,
-			complete : (results) => {
-				resolve(parseCsv(results['data']));
-			}
-		})
-	})
-}*/
 
 // 데이터 섞기
 // 섞는 알고리즘 .. 임시변수에 이전값 넣어두고 랜덤으로 생성된 인덱스에 값 넣기

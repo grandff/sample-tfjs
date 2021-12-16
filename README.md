@@ -45,7 +45,13 @@
 	- 손실이 감소하는지 학습 모니터링
 4. 모델평가
 
-### Tensorflow.js - 투수 예측?
+### Tensorflow.js - 투구 예측
+### Tensorflow.js - boston 집값 예측
+### Tensorflow.js - (아직 주제 못정함 이게 진짜 최종)
+- router로 express 분기 처리
+- tf-vis html return 추가
+- danfo.js 로 데이터 분석
+- 입력값 받으면 그 값에 맞는 예측값 리턴
 
 
 git 확인

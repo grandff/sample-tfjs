@@ -6,10 +6,7 @@ import {simpleTest} from "./tfjs_001/model";
 import {run} from "./tfjs_002/script";
 import {run as tf3run, predictSample} from "./tfjs_003/pitch_type";
 import { checkData } from "./tfjs_003/utils";
-import {BostonHousingDataset, featureDescriptions} from "./tfjs_004/data";
-
-// boston constructor
-const bostonData = new BostonHousingDataset();
+import {init as initBoston, run as tf4run} from "./tfjs_004/index";
 
 const app = express();
 
@@ -101,21 +98,26 @@ app.post("/pitch-type/predict", async (req, res) => {
 });
 
 app.get("/boston/test", async (req, res) => {
-	//let testUrl = "https://storage.googleapis.com/tfjs-examples/multivariate-linear-regression/data/train-data.csv";
-	// data target
-	//await loadCsv(testUrl);
-	//await downloadCsv(testUrl, "test-target");
-	/*const test = await readCsv("./csv/test-target.csv");
-	console.log(test.length);	
-	setTimeout(async () => {
-		const test = await readCsv("./csv/test-target.csv");
-		console.log(test.length);	
-	}, 3000)
-	*/
-	await bostonData.loadData();
-	res.json({
-		message : "end"
-	});
+	let readyForInit = await initBoston();	
+	let result = null;
+	if(readyForInit){
+		result = tf4run("01", false);
+	}
+	
+	if(!result){
+		res.json({
+			message : "success",
+			testLoss : result.testLoss,
+			valiLoss : result.valiLoss,
+			testLoss : result.testLoss
+		});
+	}else{
+		res.json({
+			message : "failed"
+		});
+	}
+	
+	
 })
 
 
