@@ -17,10 +17,13 @@
 	- npm install @tensorflow/tfjs
 	- npm install @tensorflow/tfjs-node
 	- npm install @tensorflow/tfjs-vis
-	- npm install axios
-	- yarn add clang-format mkdirp webpack webpack-cli webpack-dev-server -D
+	- npm install axios	
 	- yarn add argparse socket.io
 	- yarn add csv-parser
+	- yarn add morgan
+	- yarn add helmet
+	- yarn add cookie-parser
+	- yarn add danfojs-node (client side의 경우 -node 빼고)
 4. git 설정
     - git init
 5. server 파일 추가 및 json 설정 

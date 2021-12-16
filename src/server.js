@@ -2,16 +2,23 @@ require("dotenv").config();
 import express from "express";
 import bodyParser from "body-parser";
 import mysql from "mysql";
+import morgan from "morgan";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
 import {simpleTest} from "./tfjs_001/model";
 import {run} from "./tfjs_002/script";
 import {run as tf3run, predictSample} from "./tfjs_003/pitch_type";
 import { checkData } from "./tfjs_003/utils";
 import {init as initBoston, run as tf4run} from "./tfjs_004/index";
+import { priceRouter } from "./routes";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));		// express 였는지 node 였는지 일정버전 이하에는 body-parser를 사용해야함
+app.use(cookieParser());
+app.use(morgan("combined"));
+app.use(helmet());
 
 const PORT = process.env.PORT;
 
@@ -101,14 +108,13 @@ app.get("/boston/test", async (req, res) => {
 	let result = null;
 	let readyForInit = await initBoston();		
 	if(readyForInit){
-		result = await tf4run("01", false);
-		console.log(result);
+		result = await tf4run("01", false);		
 	}
 	
 	if(result.train){
 		res.json({
 			message : "success",
-			testLoss : result.testLoss,
+			trainLoss : result.trainLoss,
 			valLoss : result.valLoss,
 			testLoss : result.testLoss
 		});
@@ -117,9 +123,10 @@ app.get("/boston/test", async (req, res) => {
 			message : "failed"
 		});
 	}
-	
-	
 })
+
+// router 적용
+app.use("/price", priceRouter);
 
 
 app.listen(PORT, () => console.log(`server on ${PORT}`));
