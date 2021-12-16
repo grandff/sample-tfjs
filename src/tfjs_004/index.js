@@ -8,9 +8,13 @@ const bostonData = new BostonHousingDataset();
 const tensors = {};
 
 // hyper parameter
-const NUM_EPOHCS = 200;
-const BATCH_SIZE = 40;
+const NUM_EPOHCS = 100;
+const BATCH_SIZE = 64;
 const LEARNING_RATE = 0.01;
+
+// model 정보
+let model = "";
+let modelName = "";
 
 // data를 tensor형으로 변환하고 정규화까지
 const arraysToTensors = () => {
@@ -60,20 +64,17 @@ export const init = async () => {
 
 // fit 실행
 export const run = async (modelVer, weightsIllustration) => {
-	// 입력받은 모델마다 다르게 설정
-	let model = "";
-	let modelName = "";
-	console.log("fucking test :: ", bostonData.numFeatures)
-	if(modelVer === "01"){
-		console.log("hoxy ?? ");
-		model = linearRegressionModel();
-		console.log("hoxy ?? !!  ");
+	// 입력받은 모델마다 다르게 설정	
+	const features = bostonData.numFeatures;
+	
+	if(modelVer === "01"){		
+		model = linearRegressionModel(features);		
 		modelName = "Linear Regression Model";
 	}else if(modelVer === "02"){
-		model = multiLayerPerceptronRegressionModel1Hidden();
+		model = multiLayerPerceptronRegressionModel1Hidden(features);
 		modelName = "Multi Layer Perceptron Regression Model with 1 Hidden layer;"
 	}else if(modelVer === "03"){
-		model = multiLayerPerceptronRegressionModel2Hidden();
+		model = multiLayerPerceptronRegressionModel2Hidden(features);
 		modelName = "Multi Layer Perceptron Regression Model with 2 Hidden layer;"
 	}
 	
@@ -117,12 +118,16 @@ export const run = async (modelVer, weightsIllustration) => {
 	const testLoss = result.dataSync()[0];
 	
 	const trainLoss = trainLogs[trainLogs.length - 1].loss;
-	const valLoss = trainLogs[trainLogs.length - 1].var_loss;
+	const valLoss = trainLogs[trainLogs.length - 1].val_loss;
 	
-	// tofixed - 숫자를 고정 소수점 표기법으로 표기해 반환 (js 임)
+	console.log(typeof trainLoss, trainLoss);
+	console.log(typeof valLoss, valLoss);
+	console.log(typeof testLoss, testLoss);
+	// tofixed - 숫자를 고정 소수점 표기법으로 표기해 반환 (js 임)	
 	return {
-		testLoss : trainLoss.toFixed(4),
-		valiLoss : valLoss.toFixed(4),
+		train : true,
+		trainLoss : trainLoss.toFixed(4),
+		valLoss : valLoss.toFixed(4),
 		testLoss : testLoss.toFixed(4)
 	}
 }

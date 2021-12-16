@@ -98,17 +98,18 @@ app.post("/pitch-type/predict", async (req, res) => {
 });
 
 app.get("/boston/test", async (req, res) => {
-	let readyForInit = await initBoston();	
 	let result = null;
+	let readyForInit = await initBoston();		
 	if(readyForInit){
-		result = tf4run("01", false);
+		result = await tf4run("01", false);
+		console.log(result);
 	}
 	
-	if(!result){
+	if(result.train){
 		res.json({
 			message : "success",
 			testLoss : result.testLoss,
-			valiLoss : result.valiLoss,
+			valLoss : result.valLoss,
 			testLoss : result.testLoss
 		});
 	}else{
