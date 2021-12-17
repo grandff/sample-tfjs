@@ -50,15 +50,35 @@
 
 ### Tensorflow.js - 투구 예측
 ### Tensorflow.js - boston 집값 예측
-### Tensorflow.js - (아직 주제 못정함 이게 진짜 최종)
+### Tensorflow.js - 중고차 가격 예측
 - router로 express 분기 처리
 - tf-vis html return 추가
 - danfo.js 로 데이터 분석
 - 입력값 받으면 그 값에 맞는 예측값 리턴
 
 
+1. 데이터 로드
+2. danfo js로 데이터 분석 시작
+	- info or describe로 확인
+	- data shape 확인 ?
+	- null 값 확인
+	- int to float 변경 ?? (memory use를 확인할 수 있는지 ?)
+	- 각 컬럼별 최대 최소값 확인
+	- 만약 결측치가 있으면 보간법 사용해서 처리 가능한지 ? 아니면 0으로
+	- 데이터 분포도 확인이 가능한지?
+	- 정규화
+	- 날짜를 ymd hhmmss 로 다 나눠보기
+	- 정규화를 분포가 큰 거를 하면 되는거 아닌가?
+	- log1p 변환에 대해 다시한번 
+	- 뭔가 데이터셋을 나눌 수 있는 기준이 있는지 확인해보기
+	
+
 git 확인
 https://fomaios.tistory.com/entry/Git-Github-%EA%B0%99%EC%9D%80-%EC%A0%80%EC%9E%A5%EC%86%8C-%ED%95%A8%EA%BB%98-%EC%93%B0%EA%B8%B0feat%ED%98%91%EC%97%85%ED%95%98%EA%B8%B0
+https://gist.github.com/Back-Tracking/519a0677cbcdbee8f39d11841083a2f1
+
+
+
 
 이것도 정리 잘되어있음
 https://github.com/StephenGrider/MLKits

@@ -10,7 +10,7 @@ import {run} from "./tfjs_002/script";
 import {run as tf3run, predictSample} from "./tfjs_003/pitch_type";
 import { checkData } from "./tfjs_003/utils";
 import {init as initBoston, run as tf4run} from "./tfjs_004/index";
-import { priceRouter } from "./routes";
+import { priceRouter } from "./tfjs_005/router";
 
 const app = express();
 
