@@ -1,6 +1,6 @@
 import * as tf from "@tensorflow/tfjs-node";
 import * as fs from "fs";
-import {changeBrandValue} from "./utils/changeVal";
+import {changeBrandValue, chnageModel, changeTransMission, changeFuelType} from "./utils/changeVal";
 const axios = require('axios');
 const csv = require('csv-parser');
 const util = require('util');
@@ -15,8 +15,6 @@ const TRAIN_TARGET_FN = "y_train.csv";
 const TEST_FEATURES_FN = "X_test.csv";
 const TEST_TARGET_FN = "y_test.csv";
 
-let testFlag = false;
-
 // 파일 읽기(csv parser 사용)
 export const readCsv = async (fileName) => {
 	const fullUrl = `${__dirname}${BASE_URL}${fileName}`;	
@@ -30,12 +28,17 @@ export const readCsv = async (fileName) => {
 		})
 		.on('data', (data) => {
 			// string to in (class)
-			const parseToInt = changeStringToInteger(data.brand, data.model, data.transmission, data.fuelType);
-			data.brand = parseToInt.brand;
+			if(fileName.includes('X')){
+				const parseToInt = changeStringToInteger(data.brand, data.model, data.transmission, data.fuelType);
+				data.brand = parseToInt.brand;
+				data.model = parseToInt.model;
+				data.transmission = parseToInt.transmission;
+				data.fuelType = parseToInt.fuelType;
+			}			
 			
 			dataSet.push(data);
 		})
-		.on('end', () => {			
+		.on('end', () => {						
 			// carID 기준으로 정렬하기
 			dataSet.sort((a,b) => {
 				if (a.carID < b.carID) return -1;
@@ -43,12 +46,12 @@ export const readCsv = async (fileName) => {
 				return 0;
 			});
 			
-			/* 이건 danfo 확인 후 해보기
-			dataSet = dataSet.map((row) => {
-				return Object.keys(row).map(key => parseFloat(row[key]));
+			// 전부다 integer 형으로 변경
+			dataSet = dataSet.map((row) => {				
+				delete row.carID;		// id 값은 제거하기 (이미 정렬했으므로)
+				return Object.keys(row).map(key => row[key] * 1);
 			});
-			*/
-			//console.log(dataSet);
+			
 			resolve(dataSet);
 		})
 	});
@@ -76,6 +79,9 @@ export const trainFeatures = ['brand','model','year','transmission','mileage','f
 const changeStringToInteger = (brand, model, transmission, fuelType) => {
 	let result = {};
 	result.brand = changeBrandValue(brand);
+	result.model = chnageModel(model);
+	result.transmission = changeTransMission(transmission);
+	result.fuelType = changeFuelType(fuelType);
 	return result;	
 }
 

@@ -1,5 +1,6 @@
 import * as tf from "@tensorflow/tfjs-node";
 import {PriceDataSet, trainFeatures, readCsv} from "./data";
+import { showDataFrame } from "./analysis";
 const priceDataset = new PriceDataSet();
 
 let tensors = {};
@@ -14,13 +15,17 @@ const arraysToTensors = () => {
 
 // 데이터 로드
 export const init = async () => {
-	/*await priceDataset.loadData();	
-	arraysToTensors();*/
-	
-	// 일단 데이터셋 하나로 테스트 해보기
-	const result = await readCsv("X_train.csv");
-	tensors.rawTrainFeatures = tf.tensor2d(result, 'float32');
+	// data load 및 텐서로 변환
+	await priceDataset.loadData();	
+	arraysToTensors();
+
 	return {
 		result : tensors
 	}
+}
+
+// 데이터 프레임 로드
+export const dataFrame = () => {
+	showDataFrame();
+	
 }
