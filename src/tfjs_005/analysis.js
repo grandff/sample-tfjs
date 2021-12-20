@@ -4,52 +4,32 @@ const dfd = require("danfojs-node");
 // x feautres dataframe 조회
 export const showDataFrame = (data) => {    
     let df = new dfd.DataFrame(data, {columns: trainFeatures});    
-	df.ctypes.print();
+	//df.ctypes.print();
     df.describe().print();
-	df.isna().print();			// no null value
+	//df.isna().print();			// no null value
+	/*
+		데이터 프레임 확인 결과 mileage, tax, mpg 세개 정규화 필요
+	*/
 }
 
 // minmax scalar 사용
 export const dfdMinMaxScalar = (data, features) => {
-	let df = new dfd.DataFrame(data, {columns: trainFeatures});
+	let df = new dfd.DataFrame(data, {columns: trainFeatures});	
 	let sub_df = df.iloc({columns: features});	// array 매개변수로 줘야함 number만
-	let scaler = new dfd.MinMaxScaler()
 	
+	// minx max scaler
+	let scaler = new dfd.MinMaxScaler()	
 	scaler.fit(sub_df);
-	let test1 = scaler.transform(sub_df);
-	test1.print();
+	let normalizationDf = scaler.transform(sub_df);	// transform 한거에서 tensor 객체만 넘겨주면 됨
 	
-	// drop을하고 concat을 해야하나 .. ?
-	// 컬럼 이름도 다시 바꿔야함 인덱스로 바껴버렸음
+	// 새로운 데이터프레임 생성
+	df.drop({ columns: ["mileage", "tax", "mpg"], inplace: true });
+	let com_df = dfd.concat({ df_list: [df, normalizationDf], axis: 1 })
+	com_df.rename({ mapper: {"0": "mileage"},inplace: true })
+	com_df.rename({ mapper: {"1": "tax"},inplace: true })
+	com_df.rename({ mapper: {"2": "mpg"},inplace: true })
+	
+	return {
+		data : com_df.tensor
+	}
 }
-
-/*
-// min max scalar
-
-scaler.fit(Xtrain)
-Xtrain = scaler.transform(Xtrain)
-//return [Xtrain.tensor, ytrain.tensor]
-
-
-let df = new dfd.DataFrame(data)
-let sf = df.iloc({columns: ["0"]})
-
-scaler.fit(sf)
-
-let df_enc = scaler.transform(sf)
-df_enc.print()
-*/
-
-// 라벨인코딩
-/*
-	//label Encode Name feature
-let encoder = new dfd.LabelEncoder()
-let cols = ["Sex", "Name"]
-cols.forEach(col => {
-  encoder.fit(df[col])
-  enc_val = encoder.transform(df[col])
-  df.addColumn({ column: col, values: enc_val, inplace: true })
-})
-
-df.head().print()
-*/
