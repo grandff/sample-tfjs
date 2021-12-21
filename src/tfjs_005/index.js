@@ -44,8 +44,9 @@ export const init = async () => {
 	normalizedData = dfdMinMaxScalar(tensors.rawTestFeatures, [4, 6, 7]);
 	tensors.testFeatures = normalizedData.data;
 	//showDataFrame(priceData.result.rawTestFeatures);		
+	showDataFrame(tensors.rawTrainFeatures);
 	showDataFrame(tensors.trainFeatures);
-	showDataFrame(tensors.testFeatures);
+	//showDataFrame(tensors.testFeatures);
 	
 	return {
 		result : true
@@ -69,10 +70,9 @@ export const train = async () => {
 	
 	// 모델 피팅
 	console.log("모델 훈련 시작");
-	console.log(features);
 	console.log(tensors.trainFeatures, tensors.trainTarget);
 	
-	await model.fit(tensors.trainFeatures, tensors.trainTarget,{
+	await model.fit(tensors.rawTrainFeatures, tensors.trainTarget,{
 		batchSize : BATCH_SIZE,
 		epochs : NUM_EPOCHS,
 		validationSplit : 0.2,
