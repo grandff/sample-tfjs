@@ -7,13 +7,18 @@ export const linearRegressionModel = (features) => {
 	const model = tf.sequential();
 	model.add(tf.layers.dense({
 		inputShape : [features],
-		units : 64,
-		activation : 'relu',
+		units : 128,
+		activation : 'sigmoid',
 		kernelInitializer : 'leCunNormal'
 	}));
 	model.add(tf.layers.dense({
 		units : 64,
-		activation : 'relu',
+		activation : 'sigmoid', //relu
+		kernelInitializer : 'leCunNormal'
+	}));
+	model.add(tf.layers.dense({
+		units : 32,
+		activation : 'sigmoid', //relu
 		kernelInitializer : 'leCunNormal'
 	}));
 	model.add(tf.layers.dense({units : 1}));

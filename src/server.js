@@ -108,7 +108,7 @@ app.get("/boston/test", async (req, res) => {
 	let result = null;
 	let readyForInit = await initBoston();		
 	if(readyForInit){
-		result = await tf4run("01", false);		
+		result = await tf4run("03", false);		
 	}
 	
 	if(result.train){

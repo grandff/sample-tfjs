@@ -2,6 +2,7 @@ import * as tf from "@tensorflow/tfjs-node";
 import {BostonHousingDataset, featureDescriptions} from "./data";
 import * as normalization from "./normalization";
 import {linearRegressionModel, multiLayerPerceptronRegressionModel1Hidden, multiLayerPerceptronRegressionModel2Hidden} from "./model";
+import {linearRegressionModel as anotherModel} from "../tfjs_005/model";
 
 // boston constructor
 const bostonData = new BostonHousingDataset();
@@ -76,6 +77,9 @@ export const run = async (modelVer, weightsIllustration) => {
 	}else if(modelVer === "03"){
 		model = multiLayerPerceptronRegressionModel2Hidden(features);
 		modelName = "Multi Layer Perceptron Regression Model with 2 Hidden layer;"
+	}else if(modelVer === "04"){
+		model = anotherModel(features);
+		modelName = "Test Model";
 	}
 	
 	// 훈련 로그 정보 저장
@@ -93,6 +97,7 @@ export const run = async (modelVer, weightsIllustration) => {
 	
 	// 모텔 피팅
 	console.log(`${modelName} Starting training process ... `);
+	console.log(tensors.trainFeatures, tensors.trainTarget);
 	await model.fit(tensors.trainFeatures, tensors.trainTarget, {
 		batchSize : BATCH_SIZE,
 		epochs : NUM_EPOHCS,

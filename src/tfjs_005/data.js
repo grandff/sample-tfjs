@@ -52,6 +52,8 @@ export const readCsv = async (fileName) => {
 				return Object.keys(row).map(key => row[key] * 1);
 			});
 			
+			console.log(`${fileName} complete`);
+			
 			resolve(dataSet);
 		})
 	});
