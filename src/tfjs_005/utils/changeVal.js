@@ -30,7 +30,7 @@ export const changeBrandValue = (brand) => {
 			result = 9;
 			break;
 		default : 
-			result = -1;
+			result = 0;
 	}
 	return result;
 }
@@ -205,7 +205,7 @@ export const chnageModel = (model) => {
 			result = 55; 
 			break;
 		default :
-			result = -1; 
+			result = 0; 
 	}
 
 	return result;
@@ -225,7 +225,7 @@ export const changeTransMission = (mission) => {
 			result = 3;
 			break;
 		default :
-			result = -1;
+			result = 0;
 	}
 
 	return result;
@@ -251,7 +251,7 @@ export const changeFuelType = (fuel) => {
 			result = 5;
 			break;
 		default :
-			result = -1;
+			result = 0;
 	}
 
 	return result;
